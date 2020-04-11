@@ -2,4 +2,4 @@
 Description=Set up LTE modem in the dumbest possible way 
 
 [Service]
-ExecStart=python /rno-g/bin/setup-lte.py 
+ExecStart=/usr/bin/python3 /rno-g/bin/setup-lte
