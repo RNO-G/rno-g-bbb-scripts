@@ -1,0 +1,71 @@
+#! /usr/bin/env python3
+
+# Set up program for LTE modem directly (no fancy ofono or connman or whateveR) 
+# Should be run after LTE is on (perhaps by a udev rule or systemd unit) 
+# This seem to work but might be a bit fragile. 
+# Cosmin Deaconu <cozzyd@kicp.uchicago.edu> 
+
+import serial 
+import sys 
+import os 
+import re 
+
+
+# Hopefully nothing else is ever ttyACM0 :) 
+# TODO: Write a udev rule to give this a better name 
+# (since this script will likely be triggered by a udev rule that makes sense anyway) 
+acm = serial.Serial("/dev/ttyACM0",115200,timeout=1)   
+
+
+# read a line and convert it to a string
+def rl(): 
+    acm.readline().decode("utf-8") 
+
+# write a line, eat the echoed and blank line 
+def wl(text):
+    acm.write(text.encode("utf-8"); 
+    rl() #echoed line
+    rl() #blank line 
+
+def check_ok(cmd):
+    wl(cmd)
+    if rl() != 'OK\r\n':
+        print("Didn't get an ok from " + cmd); 
+        sys.exit(1); 
+
+
+#flush a line 
+wl(b'\r\n') 
+
+# Check for ok 
+check_ok("AT\r\n") 
+
+# Get the ip address 
+wl('AT+CGPADDR=1\r\n') 
+addrline = rl() 
+rl() # blank line 
+rl() # ok line 
+
+match = re.search('\+CGPADDR: 1,\"(\S+)\"',addrline)
+addr = match[1] 
+print("IP address is %s" %(addr))
+
+#Now let's set up the modem properly 
+check_ok('AT#NCM=1,1\r\n') 
+wl('AT+CGDATA="M-RAW_IP",1\r\n') 
+
+#Wait for either a connect or error 
+while True: 
+    text = rl() 
+    if text =='CONNECT\r\n':
+        print("Connected!\n") 
+        break
+    if text =='ERROR\r\n': 
+        print("Didn't connect :(")
+        sys.exit(1); 
+
+#set up the connection 
+cmd = "ifconfig wwan0 %s netmask 255.0.0.0 up" % (addr)
+print(cmd) 
+os.system(cmd)
+

@@ -1,0 +1,10 @@
+#! /bin/sh 
+# dumb program just to check if wwan0 is up
+
+if test -d /sys/class/net/wwan0 ; then 
+  echo "yes" 
+else
+  echo "no" 
+fi
+
+
