@@ -1,5 +1,0 @@
-[Unit] 
-Description=Set up LTE modem in the dumbest possible way 
-
-[Service]
-ExecStart=/usr/bin/python3 /rno-g/bin/setup-lte
