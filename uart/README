@@ -1,0 +1,5 @@
+This is a udev rule to set up symlinks and the baud rates and such for each serial device. 
+
+
+
+

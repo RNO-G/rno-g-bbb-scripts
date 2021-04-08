@@ -1,6 +1,6 @@
 
 targets := install uninstall 
-subdirs := lte
+subdirs := lte uart
 
 
 $(targets): $(subdirs) 

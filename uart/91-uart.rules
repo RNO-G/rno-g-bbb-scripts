@@ -1,0 +1,6 @@
+# Setup UARTS for rno-g
+
+SUBSYSTEM=="tty",  KERNEL=="ttyS1", SYMLINK+="ttyController", RUN+="/bin/stty -F /dev/ttyS1 115200 -echo" 
+SUBSYSTEM=="tty",  KERNEL=="ttyS4", SYMLINK+="ttyGPS", RUN+="/bin/stty -F /dev/ttyS4 -echo" 
+SUBSYSTEM=="tty",  KERNEL=="ttyS5", SYMLINK+="ttyRadiant", RUN+="/bin/stty -F /dev/ttyS5 115200 -echo raw" 
+
