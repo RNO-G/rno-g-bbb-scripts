@@ -1,0 +1,16 @@
+#! /bin/sh
+
+INTERVAL=60
+DEST=10.2.0.1
+COUNT=3
+
+while true; 
+do
+if test -d /sys/class/net/wwan0 ; then 
+  ping -c $COUNT $DEST
+fi
+
+sleep $INTERVAL 
+
+done
+

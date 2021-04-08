@@ -1,0 +1,8 @@
+[Unit] 
+Description=Make sure we keep pinging the LTE modem
+
+[Service]
+ExecStart=/bin/sh /rno-g/bin/lte-keep-alive
+
+[Install] 
+WantedBy=multi-user.target
