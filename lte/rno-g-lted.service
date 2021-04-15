@@ -1,0 +1,11 @@
+[Unit] 
+Description=Aggressively try to connect to LTE
+
+[Service]
+ExecStart=/rno-g/bin/rno-g-lted 
+ExecReload=kill -USR1 $MAINPID
+Restart=always
+RestartSec=3
+
+[Install] 
+WantedBy=multi-user.target
