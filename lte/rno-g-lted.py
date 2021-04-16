@@ -121,7 +121,7 @@ def try_to_connect():
     print(addrline) 
     match = re.search('\+CGPADDR: 1,\"(\S+)\"',addrline).groups() 
     print(match) 
-    if len(match) < 1: 
+    if match == None or len(match) < 1: 
         print ("Didn't get an IP?")
         return 2
 
@@ -143,10 +143,12 @@ def try_to_connect():
             return 3 
 
     if wwan0_up(): 
+        run("ip addr flush dev wwan0") 
         run("ifconfig wwan0 down")
 
     #set up the connection 
     run("ifconfig wwan0 %s netmask 255.0.0.0 up" % (addr))
+    time.sleep(1) 
 
     #set up the routes
     run("ip route add 10.2.0.0/24 via 10.2.0.1"); 
@@ -184,6 +186,7 @@ if __name__=="__main__":
                 for i in range(5): 
                     success = not try_to_connect() 
                     if success: 
+                        time.sleep(5) 
                         break 
                     interruptible_sleep(20); 
                 if not success: 
