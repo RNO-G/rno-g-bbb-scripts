@@ -1,0 +1,10 @@
+#!/bin/bash 
+
+trap 'echo "exiting..."' SIGINT SIGTERM 
+
+cat /dev/ttyController & 
+BGPID=$! 
+echo "Controller Board Console, BGPID=$BGPID"
+cat > /dev/ttyController
+kill -TERM ${BGPID}
+
