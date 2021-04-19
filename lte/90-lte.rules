@@ -1,1 +1,2 @@
-KERNEL=="ttyACM0",SUBSYSTEM=="tty",SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bc7", ATTRS{idProduct}=="0036", SYMLINK+="ttyLTE",  RUN+="/rno-g/bin/rno-g-lte-trigger" 
+SUBSYSTEM=="tty",ACTION=="add",  ENV{ID_USB_INTERFACE_NUM}=="00", ENV{ID_VENDOR_ID}=="1bc7", ENV{ID_MODEL_ID}=="0036", SYMLINK+="ttyLTE",  RUN+="/rno-g/bin/rno-g-lte-trigger" 
+
