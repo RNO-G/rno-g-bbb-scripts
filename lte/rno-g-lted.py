@@ -143,8 +143,9 @@ def try_to_connect():
             return 3 
 
     if wwan0_up(): 
-        run("ip addr flush dev wwan0") 
         run("ifconfig wwan0 down")
+
+    run("ip addr flush dev wwan0") 
 
     #set up the connection 
     run("ifconfig wwan0 %s netmask 255.0.0.0 up" % (addr))
