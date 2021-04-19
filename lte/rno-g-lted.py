@@ -168,31 +168,47 @@ if __name__=="__main__":
 
     while True: 
 
-        if not check_serial(): 
-            if acm!=None: 
-                acm.close() 
-            interruptible_sleep(check_serial_sleep_amt) 
-        else:  
-            if acm==None:
-               open_serial()
+        try: 
+            if not check_serial(): 
+                if acm is not None: 
+                    try: 
+                        acm.close() 
+                    except E: 
+                        print("couldn't close acm: " + E) 
+                    acm = None 
+                interruptible_sleep(check_serial_sleep_amt) 
+            else:  
+                if acm is None:
+                   open_serial()
+                   time.sleep(5) 
+                   continue
 
-            if not check_connection(): 
-                interruptible_sleep(check_connection_sleep_amt) 
-            else: 
+                if not check_connection(): 
+                    interruptible_sleep(check_connection_sleep_amt) 
+                else: 
 
-                print("Connection check failed") 
-                time.sleep(5) 
-                success= False; 
-                for i in range(5): 
-                    success = not try_to_connect() 
-                    if success: 
-                        time.sleep(5) 
-                        break 
-                    interruptible_sleep(20); 
-                if not success: 
-                    check_ok("AT+COPS=0)") #make sure automatic network selection 
+                    print("Connection check failed") 
                     time.sleep(5) 
-                    reboot_modem() 
+                    success= False; 
+                    for i in range(5): 
+                        success = not try_to_connect() 
+                        if success: 
+                            time.sleep(5) 
+                            break 
+                        interruptible_sleep(20); 
+                    if not success: 
+                        check_ok("AT+COPS=0)") #make sure automatic network selection 
+                        time.sleep(5) 
+                        reboot_modem() 
+                        acm.close() 
+                        acm = None
+                        time.sleep(5) 
+
+
+        except e: 
+            print("Got " + e) 
+
+
 
         gc.collect() 
 
