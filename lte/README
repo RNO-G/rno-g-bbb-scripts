@@ -1,5 +1,10 @@
 Scripts for the LTE modem. 
 
-TODO: Write udev rules
+90-lte.rules: lte rule to rename ttyACM0 to ttyLTE. Might break if anything else is called ttyACM0 so maybe should be more careful? 
+setup-lte:  setups up the LTE modem (one-time...) 
+lte-keep-alive: just pings momentarily in an attempt to keep the conencction alive. should not be necessary with rno-g-lted 
+rno-g-lted: daemon that checks for LTE connection and keeps trying to reconnect. 
+rno-g-lte-trigger: sends signal to rno-g-lted 
+
 
 
