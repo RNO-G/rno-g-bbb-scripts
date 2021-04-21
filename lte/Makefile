@@ -1,4 +1,4 @@
-all: 
+help: 
 	@echo "make install or make uninstall" 
 
 install: 
