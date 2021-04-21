@@ -1,0 +1,17 @@
+#! /bin/sh 
+
+#This script is called by the rno-g-export-gpios service
+# to export all of the relevant GIOS. It also will create symlinks for some of them. 
+
+
+# LTE ENABLE GPIO (gpio 48) 
+if [ ! -d /sys/class/gpio/gpio48 ]; then
+	echo 48 > /sys/class/gpio/export
+fi
+ln -s /sys/class/gpio/gpio48 /dev/gpioENABLELTE 
+#echo 0 > /dev/gpioENABLELTE/value 
+#echo out > /dev/gpioENABLELTE/direction 
+
+
+
+
