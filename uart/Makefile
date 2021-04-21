@@ -1,3 +1,5 @@
+help: 
+	@echo "make install or uninstall"
 
 install: 
 	install 91-uart.rules /etc/udev/rules.d 

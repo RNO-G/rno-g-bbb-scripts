@@ -1,0 +1,10 @@
+[Unit] 
+Description=Set up GPIOs 
+Requires=local-fs.target
+
+[Service]
+ExecStart=/rno-g/bin/rno-g-export-gpios 
+Type=oneshot
+
+[Install] 
+WantedBy=multi-user.target
