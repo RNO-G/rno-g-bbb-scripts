@@ -158,6 +158,11 @@ def try_to_connect():
     run("ip route add default via 10.2.0.1"); 
     return  0; 
 
+def reboot_modem_via_uc(): 
+    print ("Trying to restart modem") 
+    os.system('echo "#LTE-OFF" > /dev/ttyController') 
+    time.sleep(3)
+    os.system('echo "#LTE-ON" > /dev/ttyController') 
 
 def reboot_modem(): 
     return check_ok("AT+ENHRST=1,0")  #reboot router 
@@ -177,6 +182,7 @@ if __name__=="__main__":
                     except E: 
                         print("couldn't close acm: " + E) 
                     acm = None 
+                reboot_modem_via_uc() 
                 interruptible_sleep(check_serial_sleep_amt) 
             else:  
                 if acm is None:
@@ -198,7 +204,7 @@ if __name__=="__main__":
                             break 
                         interruptible_sleep(20); 
                     if not success: 
-                        check_ok("AT+COPS=0)") #make sure automatic network selection 
+                        check_ok("AT+COPS=0") #make sure automatic network selection 
                         time.sleep(5) 
                         reboot_modem() 
                         acm.close() 
