@@ -59,8 +59,7 @@ def wl(text):
 def check_ok(cmd):
     wl(cmd)
     if rl() != 'OK\r\n':
-        print("Didn't get an ok from " + cmd); 
-        return 1
+        raise IOError("did not get an ok from " + cmd)
     return 0 
 
 def receive_signal(signum, stack): 
@@ -69,7 +68,7 @@ def receive_signal(signum, stack):
     interrupt_flag = True
 
 def check_serial(): 
-    return os.path.exists("/dev/ttyLTE") 
+    return os.path.exists("/dev/ttyLTE")
 
 def run(cmd): 
     print(cmd) 
@@ -88,7 +87,7 @@ def check_connection():
         return 1
 
     #ping 
-    return subprocess.call(["ping","-c", str(ping_count), host])
+    return subprocess.call(["ping","-c", str(ping_count),"-n","-q", host])
 
 
 
@@ -104,7 +103,8 @@ def try_to_connect():
     acm.flush() 
 
     # Check for ok 
-    if (check_ok("AT\r\n")): return 1 
+    if (check_ok("AT\r\n")): 
+        return 1 
 
     wl('AT#RFSTS\r\n'); 
     rfsts = rl() 
@@ -119,13 +119,13 @@ def try_to_connect():
     rl() # ok line 
     
     print(addrline) 
-    match = re.search('\+CGPADDR: 1,\"(\S+)\"',addrline).groups() 
+    match = re.search('\+CGPADDR: 1,\"(\S+)\"',addrline)
     print(match) 
-    if match == None or len(match) < 1: 
+    if match == None or len(match.groups()) < 1: 
         print ("Didn't get an IP?")
         return 2
 
-    addr = match[0] 
+    addr = match.groups()[0] 
     print("IP address is %s" %(addr))
 
     #Now let's set up the modem properly 
@@ -158,8 +158,16 @@ def try_to_connect():
     run("ip route add default via 10.2.0.1"); 
     return  0; 
 
+def reboot_modem_via_uc(): 
+    print ("Trying to restart modem via micro") 
+    time.sleep(1)
+    os.system('echo "#LTE-OFF" > /dev/ttyController') 
+    time.sleep(3)
+    os.system('echo "#LTE-ON" > /dev/ttyController') 
+    time.sleep(1)
 
 def reboot_modem(): 
+    print ("Trying to restart modem directly") 
     return check_ok("AT+ENHRST=1,0")  #reboot router 
 
 
@@ -167,48 +175,48 @@ if __name__=="__main__":
 
     signal.signal(signal.SIGUSR1,receive_signal) 
 
+    time.sleep(5) #wait five seconds to avoid dying too quickly
+
     while True: 
 
-        try: 
-            if not check_serial(): 
-                if acm is not None: 
-                    try: 
-                        acm.close() 
-                    except E: 
-                        print("couldn't close acm: " + E) 
-                    acm = None 
-                interruptible_sleep(check_serial_sleep_amt) 
-            else:  
-                if acm is None:
+        if not check_serial(): 
+            if acm is not None: 
+                acm.close() 
+                acm = None 
+            reboot_modem_via_uc() 
+            interruptible_sleep(check_serial_sleep_amt) 
+        else:  
+            if acm is None:
+               try: 
+                   print("Opening serial") 
                    open_serial()
-                   time.sleep(5) 
-                   continue
+                   time.sleep(3) 
+                   check_ok("AT\r\n") 
+               except IOError: 
+                   reboot_modem_via_uc(); 
+               time.sleep(5) 
+               continue
 
-                if not check_connection(): 
-                    interruptible_sleep(check_connection_sleep_amt) 
-                else: 
+            if not check_connection(): 
+                interruptible_sleep(check_connection_sleep_amt) 
+            else: 
 
-                    print("Connection check failed") 
+                print("Connection check failed") 
+                time.sleep(5) 
+                success= False; 
+                for i in range(5): 
+                    success = not try_to_connect() 
+                    if success: 
+                        time.sleep(5) 
+                        break 
+                    interruptible_sleep(30); 
+                if not success: 
+                    check_ok("AT+COPS=0") #make sure automatic network selection 
                     time.sleep(5) 
-                    success= False; 
-                    for i in range(5): 
-                        success = not try_to_connect() 
-                        if success: 
-                            time.sleep(5) 
-                            break 
-                        interruptible_sleep(20); 
-                    if not success: 
-                        check_ok("AT+COPS=0)") #make sure automatic network selection 
-                        time.sleep(5) 
-                        reboot_modem() 
-                        acm.close() 
-                        acm = None
-                        time.sleep(5) 
-
-
-        except e: 
-            print("Got " + e) 
-
+                    reboot_modem() 
+                    acm.close() 
+                    acm = None
+                    time.sleep(5) 
 
 
         gc.collect() 
