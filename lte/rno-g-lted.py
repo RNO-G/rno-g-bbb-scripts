@@ -162,9 +162,9 @@ def reboot_modem_via_uc():
     print ("Trying to restart modem via micro") 
     time.sleep(1)
     os.system('echo "#LTE-OFF" > /dev/ttyController') 
-    time.sleep(3)
+    time.sleep(5)
     os.system('echo "#LTE-ON" > /dev/ttyController') 
-    time.sleep(1)
+    time.sleep(15)
 
 def reboot_modem(): 
     print ("Trying to restart modem directly") 
@@ -211,12 +211,12 @@ if __name__=="__main__":
                         break 
                     interruptible_sleep(30); 
                 if not success: 
-                    check_ok("AT+COPS=0") #make sure automatic network selection 
+                    check_ok("AT+COPS=0\r\n") #make sure automatic network selection 
                     time.sleep(5) 
                     reboot_modem() 
                     acm.close() 
                     acm = None
-                    time.sleep(5) 
+                    time.sleep(20) 
 
 
         gc.collect() 
