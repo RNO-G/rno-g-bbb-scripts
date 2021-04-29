@@ -1,2 +1,2 @@
 #! /bin/sh
-stty -F /dev/ttyController 115200 -echo igncr 
+stty -F /dev/ttyController 115200 -echo igncr -inlcr
