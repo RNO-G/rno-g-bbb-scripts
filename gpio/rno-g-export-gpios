@@ -14,4 +14,9 @@ ln -s /sys/class/gpio/gpio48 /dev/gpioENABLELTE
 
 
 
-
+# RADIANT MCU RESTART (gpio 89) 
+if [ ! -d /sys/class/gpio/gpio89 ]; then
+	echo 89 > /sys/class/gpio/export
+fi
+ln -s /sys/class/gpio/gpio89 /dev/gpioRADIANTMCURESET 
+#

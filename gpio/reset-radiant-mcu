@@ -1,0 +1,14 @@
+#! /bin/sh
+
+DEV=/dev/gpioRADIANTMCURESET
+
+if [ ! -d ${DEV} ]; then
+	echo ${DEV} not a gpio dir? 
+
+else 
+echo out > /dev/gpioRADIANTMCURESET/direction
+echo 0 > /dev/gpioRADIANTMCURESET/value
+sleep 0.5 
+echo in > /dev/gpioRADIANTMCURESET/direction
+fi 
+
