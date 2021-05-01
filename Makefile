@@ -1,6 +1,6 @@
 
 targets := install uninstall 
-subdirs := lte uart
+subdirs := lte uart gpio
 
 
 $(targets): $(subdirs) 
