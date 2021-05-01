@@ -7,8 +7,9 @@
 # LTE ENABLE GPIO (gpio 48) 
 if [ ! -d /sys/class/gpio/gpio48 ]; then
 	echo 48 > /sys/class/gpio/export
+	ln -s /sys/class/gpio/gpio48 /dev/gpioENABLELTE 
 fi
-ln -s /sys/class/gpio/gpio48 /dev/gpioENABLELTE 
+
 #echo 0 > /dev/gpioENABLELTE/value 
 #echo out > /dev/gpioENABLELTE/direction 
 
@@ -17,6 +18,6 @@ ln -s /sys/class/gpio/gpio48 /dev/gpioENABLELTE
 # RADIANT MCU RESTART (gpio 89) 
 if [ ! -d /sys/class/gpio/gpio89 ]; then
 	echo 89 > /sys/class/gpio/export
+	ln -s /sys/class/gpio/gpio89 /dev/gpioRADIANTMCURESET 
 fi
-ln -s /sys/class/gpio/gpio89 /dev/gpioRADIANTMCURESET 
 #
