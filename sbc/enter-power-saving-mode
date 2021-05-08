@@ -1,0 +1,4 @@
+#! /bin/sh
+
+cpupower -e 1 
+cpupower -e 0
