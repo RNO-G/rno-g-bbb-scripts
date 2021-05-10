@@ -56,10 +56,14 @@ def wl(text):
     rl() #echoed line
     rl() #blank line 
 
-def check_ok(cmd):
+def check_ok(cmd, throw_exception = True):
     wl(cmd)
-    if rl() != 'OK\r\n':
-        raise IOError("did not get an ok from " + cmd)
+    r = rl(); 
+    if  r!= 'OK\r\n':
+        if throw_exception: 
+            raise IOError("did not get an ok from " + cmd + " , got: "+r)
+        print ("did not get an ok from " + cmd +"+ , got: "+r)
+        return 1
     return 0 
 
 def receive_signal(signum, stack): 
