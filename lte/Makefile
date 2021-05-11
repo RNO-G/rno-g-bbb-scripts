@@ -1,7 +1,10 @@
 help: 
 	@echo "make install or make uninstall" 
 
-install: 
+check-sdnotify:
+	dpkg-query -s python3-sdnotify || apt install python3-sdnotify 
+
+install: check-sdnotify 
 	install setup-lte /rno-g/bin
 	install is-lte-up /rno-g/bin
 	install rno-g-lted.py /rno-g/bin/rno-g-lted
