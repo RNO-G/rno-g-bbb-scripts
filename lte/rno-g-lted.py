@@ -175,7 +175,7 @@ def reboot_modem_via_uc():
 
 def reboot_modem(): 
     print ("Trying to restart modem directly") 
-    return check_ok("AT+ENHRST=1,0")  #reboot router 
+    return check_ok("AT#ENHRST=1,0")  #reboot router 
 
 
 if __name__=="__main__": 
