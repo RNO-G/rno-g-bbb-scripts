@@ -73,6 +73,7 @@ def receive_signal(signum, stack):
     print('received ',signum) 
     interrupt_flag = True
 
+
 def check_serial(): 
     return os.path.exists("/dev/ttyLTE")
 
@@ -100,7 +101,7 @@ def check_connection():
 
 def open_serial(): 
     global acm 
-    acm = serial.Serial("/dev/ttyLTE",115200,timeout=1)   
+    acm = serial.Serial("/dev/ttyLTE",115200,timeout=1, write_timeout=1)   
 
 def try_to_connect(): 
 
@@ -205,6 +206,7 @@ if __name__=="__main__":
                    check_ok("AT\r\n") 
                    time.sleep(1) 
                except IOError: 
+                   print("error while reading serial") 
                    reboot_modem_via_uc(); 
                    acm = None 
                time.sleep(5) 
