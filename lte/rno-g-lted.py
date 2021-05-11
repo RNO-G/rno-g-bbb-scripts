@@ -84,6 +84,7 @@ def run(cmd):
 def wwan0_up(): 
     with open("/sys/class/net/wwan0/operstate") as f: 
         state = f.readline(); 
+        print("wwan0 is " + state); 
         return state == "up\n" 
 
 
@@ -175,7 +176,7 @@ def reboot_modem_via_uc():
 
 def reboot_modem(): 
     print ("Trying to restart modem directly") 
-    return check_ok("AT#ENHRST=1,0")  #reboot router 
+    return check_ok("AT#ENHRST=1,0",False)  #reboot router 
 
 
 if __name__=="__main__": 
@@ -217,7 +218,11 @@ if __name__=="__main__":
                 time.sleep(5) 
                 success= False; 
                 for i in range(5): 
-                    success = not try_to_connect() 
+                    if not check_connection(): 
+                        print("Connection check is actually ok") 
+                        success = True
+                    else: 
+                        success = not try_to_connect() 
                     if success: 
                         time.sleep(5) 
                         break 
