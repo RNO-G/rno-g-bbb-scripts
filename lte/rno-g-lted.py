@@ -202,8 +202,10 @@ if __name__=="__main__":
                    open_serial()
                    time.sleep(3) 
                    check_ok("AT\r\n") 
+                   time.sleep(1) 
                except IOError: 
                    reboot_modem_via_uc(); 
+                   acm = None 
                time.sleep(5) 
                continue
 
