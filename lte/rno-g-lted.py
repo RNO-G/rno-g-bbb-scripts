@@ -160,9 +160,10 @@ def try_to_connect():
     #set up the routes
     run("ip route add 10.2.0.0/24 via 10.2.0.1"); 
 
-    # not yet while testing 
     run("ip route add default via 10.2.0.1"); 
-    return  0; 
+    run('echo "nameserver 8.8.8.8" > /etc/resolv.conf')
+    time.sleep(10) 
+    return  0
 
 def reboot_modem_via_uc(): 
     print ("Trying to restart modem via micro") 
