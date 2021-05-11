@@ -1,5 +1,5 @@
 #! /bin/sh 
 
 #Disable idle states on SBC 
-sudo cpupower -d 1
-sudo cpupower -d 0
+sudo cpupower idle-set -d 1
+sudo cpupower idle-set -d 0

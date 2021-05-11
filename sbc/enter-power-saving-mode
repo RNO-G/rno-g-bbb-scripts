@@ -1,4 +1,4 @@
 #! /bin/sh
 
-cpupower -e 1 
-cpupower -e 0
+cpupower idle-set -e 1 
+cpupower idle-set -e 0
