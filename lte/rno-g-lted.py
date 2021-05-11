@@ -15,6 +15,7 @@ import re
 import time
 import signal 
 import subprocess 
+import sdnotify 
 
 #this doesn't seem to help... 
 import gc 
@@ -28,6 +29,7 @@ check_serial_sleep_amt = 60
 check_connection_sleep_amt = 120 
 interrupt_flag = False 
 
+notifier = sdnotify.SystemdNotifier() 
 
 # read a line and convert it to a string
 def rl(): 
@@ -180,8 +182,11 @@ if __name__=="__main__":
     signal.signal(signal.SIGUSR1,receive_signal) 
 
     time.sleep(5) #wait five seconds to avoid dying too quickly
+    print("Started!"); 
 
     while True: 
+        print("Kicking watchdog"); 
+        notifier.notify("WATCHDOG=1") 
 
         if not check_serial(): 
             if acm is not None: 
