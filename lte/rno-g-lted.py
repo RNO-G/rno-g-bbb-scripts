@@ -42,7 +42,7 @@ def rl():
 
 def moni():  
     acm.write("AT#MONI\r\n".encode("utf-8")); 
-    res = "None"
+    res = "None\r\n"
     line = None
     while line != "OK\r\n": 
         line = rl(); 
