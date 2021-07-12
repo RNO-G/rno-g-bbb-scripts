@@ -26,8 +26,11 @@ acm = None
 host = "10.1.0.1"
 ping_count = 5 
 check_serial_sleep_amt = 60 
-check_connection_sleep_amt = 120 
+check_connection_sleep_amt = 30 
 interrupt_flag = False 
+moni_file = open("/data/lte.log","a"); 
+
+
 
 notifier = sdnotify.SystemdNotifier() 
 
@@ -37,7 +40,16 @@ def rl():
 #    print(r) 
     return r
 
-
+def moni():  
+    acm.write("AT#MONI\r\n".encode("utf-8")); 
+    res = "None"
+    line = None
+    while line != "OK\r\n": 
+        line = rl(); 
+        if line.startswith("#MONI"):
+            res = line
+    moni_file.write(str(time.time())+":"+res); 
+    moni_file.flush() 
 
 def interruptible_sleep(t, max_sleep =1): 
     global interrupt_flag 
@@ -212,6 +224,7 @@ if __name__=="__main__":
                time.sleep(5) 
                continue
 
+            moni() 
             if not check_connection(): 
                 interruptible_sleep(check_connection_sleep_amt) 
             else: 
