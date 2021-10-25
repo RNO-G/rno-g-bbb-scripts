@@ -1,7 +1,7 @@
 #! /bin/sh 
 # this just exits sleep early on the lte daemon
 
-systemctl reload rno-g-lted 
+systemctl reload rno-g-lted || /rno-g/bin/setup-lte
 
 
 
