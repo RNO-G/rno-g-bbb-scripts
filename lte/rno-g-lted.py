@@ -234,7 +234,8 @@ if __name__=="__main__":
                 reboot_modem_via_uc() 
                 interruptible_sleep(check_serial_sleep_amt) 
         else:  
-            if acm is None:
+            ntries = 0; 
+            while acm is None:
                try: 
                    print("Opening serial") 
                    open_serial()
@@ -242,11 +243,17 @@ if __name__=="__main__":
                    check_ok("AT\r\n") 
                    time.sleep(1) 
                except IOError: 
-                   print("error while reading serial") 
-                   reboot_modem_via_uc(); 
+                   print("error while reading serial (try %d) " % (ntries)) 
+                   ntries+=1 
+                   if (ntries > 3):
+                       reboot_modem_via_uc(); 
+                       time.sleep(15) 
+                       break 
                    acm = None 
                time.sleep(5) 
-               continue
+
+            if acm is None: 
+                continue 
 
             if ENABLE_MONI: 
                 moni() 
@@ -273,7 +280,7 @@ if __name__=="__main__":
                     reboot_modem() 
                     acm.close() 
                     acm = None
-                    time.sleep(20) 
+                    time.sleep(30) 
 
 
         gc.collect() 
