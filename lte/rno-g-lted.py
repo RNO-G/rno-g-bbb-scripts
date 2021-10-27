@@ -180,16 +180,16 @@ def try_to_connect():
     return  0
 
 def reboot_modem_via_uc(): 
-    print ("Trying to restart modem via micro") 
+    print ("COMMENTED OUT Trying to restart modem via micro") 
     time.sleep(1)
-    os.system('echo "#LTE-OFF" > /dev/ttyController') 
+#    os.system('echo "#LTE-OFF" > /dev/ttyController') 
     time.sleep(5)
-    os.system('echo "#LTE-ON" > /dev/ttyController') 
+#    os.system('echo "#LTE-ON" > /dev/ttyController') 
     time.sleep(15)
 
 def reboot_modem(): 
-    print ("Trying to restart modem directly") 
-    return check_ok("AT#ENHRST=1,0",False)  #reboot router 
+    print ("COMMENTED OUT Trying to restart modem directly") 
+    #return check_ok("AT#ENHRST=1,0",False)  #reboot router 
 
 
 if __name__=="__main__": 
