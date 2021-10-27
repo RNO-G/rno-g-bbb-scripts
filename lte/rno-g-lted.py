@@ -187,7 +187,7 @@ def reboot_modem_via_uc():
         print ("Trying to restart modem via micro") 
         time.sleep(1)
         os.system('echo "#LTE-OFF" > /dev/ttyController') 
-        time.sleep(5)
+        time.sleep(15)
         os.system('echo "#LTE-ON" > /dev/ttyController') 
         time.sleep(15)
     else: 
