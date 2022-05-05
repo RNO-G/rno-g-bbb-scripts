@@ -1,0 +1,23 @@
+#! /bin/sh 
+
+NUMRESETS=${1-10} 
+ON_WAIT=${2-20} 
+OFF_WAIT=${3-10}
+
+echo "Running LTE Stress Test, $NUMRESETS resets, timing is on=$ON_WAIT, off=$OFF_WAIT" 
+
+echo "Turning off babysitter" 
+sudo systemctl stop rno-g-lted 
+
+
+for i in `seq $NUMRESETS`; do 
+  echo "Reset $i" 
+  echo "#LTE-OFF" > /dev/ttyController
+  sleep $OFF_WAIT
+  echo "#LTE-ON" > /dev/ttyController
+  sleep $ON_WAIT
+  lsusb 
+done 
+
+echo "Turning on babysitter" 
+sudo systemctl start rno-g-lted 
