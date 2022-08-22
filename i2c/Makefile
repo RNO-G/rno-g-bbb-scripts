@@ -4,6 +4,7 @@ help:
 install: 
 	install raw-wind.sh /rno-g/bin
 	mkdir -p /data/windmon/raw
+	chown rno-g:rno-g  /data/windmon/raw 
 	
 uninstall: 
 	rm -f /rno-g/bin/raw-wind.sh 
