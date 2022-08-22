@@ -21,13 +21,19 @@ import sdnotify
 import gc 
 
 
+ENABLE_MONI=not os.path.exists("/rno-g/cfg/lte-disable-moni"); 
+ENABLE_MCU_RESET=not os.path.exists("/rno-g/cfg/lte-disable-mcu-reset") 
+ENABLE_USB_RESET=not os.path.exists("/rno-g/cfg/lte-disable-usb-reset") 
 
 acm = None 
 host = "10.1.0.1"
 ping_count = 5 
 check_serial_sleep_amt = 60 
-check_connection_sleep_amt = 120 
+check_connection_sleep_amt = 30 
 interrupt_flag = False 
+moni_file = None 
+
+
 
 notifier = sdnotify.SystemdNotifier() 
 
@@ -37,7 +43,16 @@ def rl():
 #    print(r) 
     return r
 
-
+def moni():  
+    acm.write("AT#MONI\r\n".encode("utf-8")); 
+    res = "None\r\n"
+    line = None
+    while line != "OK\r\n": 
+        line = rl(); 
+        if line.startswith("#MONI"):
+            res = line
+    moni_file.write(str(time.time())+":"+res); 
+    moni_file.flush() 
 
 def interruptible_sleep(t, max_sleep =1): 
     global interrupt_flag 
@@ -168,16 +183,24 @@ def try_to_connect():
     return  0
 
 def reboot_modem_via_uc(): 
-    print ("Trying to restart modem via micro") 
-    time.sleep(1)
-    os.system('echo "#LTE-OFF" > /dev/ttyController') 
-    time.sleep(5)
-    os.system('echo "#LTE-ON" > /dev/ttyController') 
-    time.sleep(15)
+    if ENABLE_MCU_RESET: 
+        print ("Trying to restart modem via micro") 
+        time.sleep(1)
+        os.system('echo "#LTE-OFF" > /dev/ttyController') 
+        time.sleep(15)
+        os.system('echo "#LTE-ON" > /dev/ttyController') 
+        time.sleep(15)
+    else: 
+        print("Would have restarted modem via micro but not allowed"); 
+        time.sleep(30) 
 
 def reboot_modem(): 
-    print ("Trying to restart modem directly") 
-    return check_ok("AT#ENHRST=1,0",False)  #reboot router 
+    if ENABLE_USB_RESET: 
+        print ("Trying to restart modem directly") 
+        return check_ok("AT#ENHRST=1,0",False)  #reboot router 
+    else: 
+        print("Would have restart modem via USB but not allowed") 
+        return 1 
 
 
 if __name__=="__main__": 
@@ -187,18 +210,32 @@ if __name__=="__main__":
     time.sleep(5) #wait five seconds to avoid dying too quickly
     print("Started!"); 
 
+    print("Monitoring", "enabled" if ENABLE_MONI else "disabled")
+    print("MCU Reset", "enabled" if ENABLE_MCU_RESET else "disabled")
+    print("USB Reset", "enabled" if ENABLE_USB_RESET else "disabled")
+
+    if ENABLE_MONI: 
+        moni_file = open("/data/lte.log","a"); 
+
+
     while True: 
         print("Kicking watchdog"); 
+        sys.stdout.flush()
         notifier.notify("WATCHDOG=1") 
 
         if not check_serial(): 
             if acm is not None: 
                 acm.close() 
                 acm = None 
-            reboot_modem_via_uc() 
+
+            # give it a bit of time... 
             interruptible_sleep(check_serial_sleep_amt) 
+            if not check_serial():
+                reboot_modem_via_uc() 
+                interruptible_sleep(check_serial_sleep_amt) 
         else:  
-            if acm is None:
+            ntries = 0; 
+            while acm is None:
                try: 
                    print("Opening serial") 
                    open_serial()
@@ -206,12 +243,20 @@ if __name__=="__main__":
                    check_ok("AT\r\n") 
                    time.sleep(1) 
                except IOError: 
-                   print("error while reading serial") 
-                   reboot_modem_via_uc(); 
+                   print("error while reading serial (try %d) " % (ntries)) 
+                   ntries+=1 
+                   if (ntries > 3):
+                       reboot_modem_via_uc(); 
+                       time.sleep(15) 
+                       break 
                    acm = None 
                time.sleep(5) 
-               continue
 
+            if acm is None: 
+                continue 
+
+            if ENABLE_MONI: 
+                moni() 
             if not check_connection(): 
                 interruptible_sleep(check_connection_sleep_amt) 
             else: 
@@ -235,7 +280,7 @@ if __name__=="__main__":
                     reboot_modem() 
                     acm.close() 
                     acm = None
-                    time.sleep(20) 
+                    time.sleep(30) 
 
 
         gc.collect() 
@@ -243,6 +288,7 @@ if __name__=="__main__":
 
 
 
+    sys.stdout.flush()
 
 
 

@@ -15,10 +15,7 @@ import time
 #wait one second... 
 time.sleep(1) 
 
-# Hopefully nothing else is ever ttyACM0 :) 
-# TODO: Write a udev rule to give this a better name 
-# (since this script will likely be triggered by a udev rule that makes sense anyway) 
-acm = serial.Serial("/dev/ttyLTE",115200,timeout=1)   
+acm = serial.Serial("/dev/ttyLTE",115200,timeout=1, write_timeout=1)   
 
 
 # read a line and convert it to a string
@@ -46,6 +43,9 @@ wl('\r\n')
 
 # Check for ok 
 check_ok("AT\r\n") 
+
+#wait 5 seconds 
+time.sleep(5) 
 
 # Get the ip address 
 wl('AT+CGPADDR=1\r\n') 
@@ -80,15 +80,24 @@ def run(cmd):
     print(cmd) 
     os.system(cmd) 
 
+def wwan0_up(): 
+    with open("/sys/class/net/wwan0/operstate") as f: 
+        state = f.readline(); 
+        print("wwan0 is " + state); 
+        return state == "up\n" 
+
+if wwan0_up(): 
+    run("ifconfig wwan0 down")
+
+run("ip addr flush dev wwan0") 
 
 #set up the connection 
 run("ifconfig wwan0 %s netmask 255.0.0.0 up" % (addr))
 
 #set up the routes
 run("ip route add 10.2.0.0/24 via 10.2.0.1"); 
-
+run("ip route add default via 10.2.0.1"); 
 #ping 
-run ("ping -c 3 10.2.0.1"); 
+run ("ping -c 3 10.1.0.1"); 
 
-# not yet while testing 
-#run("ip route add default gw 10.1.0.1 wwan0"); 
+run('echo "nameserver 8.8.8.8" > /etc/resolv.conf')
