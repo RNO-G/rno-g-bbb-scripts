@@ -1,6 +1,6 @@
 #! /bin/bash
 
-finaldir=/data/windmon
+finaldir=/data/windmon/raw
 while true ; 
 do
 
