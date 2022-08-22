@@ -1,9 +1,10 @@
 #! /bin/bash
 
+finaldir=/data/windmon
 while true ; 
 do
 
-  outname=/tmp/windmon.`date`.log
+  outname=/tmp/windmon.`date -Is`.log
 
   for n in {1..60} 
   do
@@ -20,6 +21,6 @@ do
     echo END >> $outname
     sleep 60
   done
-  xz $outname && mv $outname.xz /data/windmon
+  xz $outname && mv $outname.xz $finaldir
 done
 
