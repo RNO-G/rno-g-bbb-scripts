@@ -10,7 +10,7 @@ do
   for n in {1..60} 
   do
     #loop over the i2c addresses
-    for addr in 48 4f
+    for addr in 48 4e
     do
 
       #start a measurement
