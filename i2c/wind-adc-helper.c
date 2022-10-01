@@ -86,13 +86,6 @@ int main(int nargs, char ** args)
 
   if (parse_args(nargs, args)) return 0; 
 
-  uint8_t * buf = malloc(nsamp_per_meas*2); 
-  if (!buf) 
-  {
-    fprintf(stderr,"Couldn't allocate memory\n");  
-    return 1; 
-  }
-
   char fname[32]; 
   sprintf(fname, "/dev/i2c-%d",bus); 
 
@@ -106,9 +99,17 @@ int main(int nargs, char ** args)
 
   if (ioctl(fd,I2C_SLAVE,addr) < 0)
   {
-    fprintf(stderr,"Couldn't set addr 0x%x %s\n", addr); 
+    fprintf(stderr,"Couldn't set addr 0x%x on %s\n", addr, fname ); 
     return 1; 
   }
+
+  uint8_t * buf = malloc(nsamp_per_meas*2); 
+  if (!buf) 
+  {
+    fprintf(stderr,"Couldn't allocate memory\n");  
+    return 1; 
+  }
+
 
   printf("START 0x%x\n", addr); 
   struct timespec start;
@@ -145,10 +146,12 @@ int main(int nargs, char ** args)
     slp.tv_sec = floorf(sleepfor); 
     slp.tv_nsec = (sleepfor-  floorf(sleepfor))*1e9; 
 
-    while (!nanosleep(&slp,&slp)); 
+    while (nanosleep(&slp,&slp)); 
   }
   
   printf("END  0x%x\n", addr); 
+  free(buf); 
+  close(fd); 
   return 0; 
 }
 
