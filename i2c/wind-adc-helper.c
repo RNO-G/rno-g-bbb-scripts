@@ -70,6 +70,11 @@ int parse_args(int nargs, char ** args)
       delay = strtof(args[++i], &endptr); 
       if (!isfinite(delay) || delay < 0) goto fail; 
     }
+    else
+    {
+      goto fail; 
+    }
+
 
     if (*endptr) goto fail; 
   }
