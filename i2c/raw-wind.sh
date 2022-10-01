@@ -12,21 +12,7 @@ do
     #loop over the i2c addresses
     for addr in 48 4e
     do
-
-      #start a measurement
-      echo START 0x$addr >> $outname
-
-      #50 100 sample measurements, 0.01 seconds apart 
-      for i in {1..50} ; 
-      do
-        echo $i  >> $outname
-        date +%s.%N >> $outname
-        i2ctransfer -y 2 r200@0x$addr >> $outname
-        date +%s.%N >> $outname
-        sleep 0.01
-      done
-
-      echo END  0x$addr>> $outname
+      /rno-g/bin/wind-adc-helper -b 2 -a 0x$addr -s 100 -d 0.01 -m 50 >> $outname 
     done
     sleep 60
   done
