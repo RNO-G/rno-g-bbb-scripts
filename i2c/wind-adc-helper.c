@@ -14,18 +14,18 @@
 static int bus=2; 
 static int nsamp_per_meas = 100; 
 static int nmeas = 50; 
-static float delay = 0; 
+static float delay = 0.05; 
 static int addr = 0x4e; 
 
 
 void usage() 
 {
-  printf("wind-adc-helper [-b BUS=2] [-s NSAMP_PER_MEAS=100] [-m NMEAS=50] [-a ADDRESS=0x4e] -d [DELAY = 0.01] [-h]\n"); 
+  printf("wind-adc-helper [-b BUS=2] [-s NSAMP_PER_MEAS=100] [-m NMEAS=50] [-a ADDRESS=0x4e] -d [DELAY = 0.05] [-h]\n"); 
   printf( "  -b BUS: The i2c bus (almost certainly is 2, the default\n") ; 
   printf( "  -s NSAMP_PER_MEAS: Number of samples per measurement (max is 4096, set by the linux i2c-dev driver)\n") ; 
   printf("   -m NMEAS: number of measurments\n");
   printf("   -a ADDRESS address of the MCP4221 (likely 0x4e or 0x48)\n");
-  printf("   -d DELAY delay between measurements\n");
+  printf("   -d DELAY delay between measurements. This is to be between the START of measurements. Since each measurement takes nsamp / (5.6 KHz), this might not do much if it's shorter than the recording time.  \n");
   printf("   -h help (show this message)\n");
 }
 
@@ -122,7 +122,7 @@ int main(int nargs, char ** args)
     clock_gettime(CLOCK_REALTIME, &start); 
     while (nread < nsamp_per_meas*2) 
     {
-      int howmany = read(fd, buf, nsamp_per_meas * 2-nread); 
+      int howmany = read(fd, buf+nread, nsamp_per_meas * 2-nread); 
       if (howmany < 0) 
       {
         fprintf(stderr,"READ RETURNED %d (%s)\n",errno,strerror(errno)); 
@@ -139,7 +139,7 @@ int main(int nargs, char ** args)
     }
     printf("%d.%09d\n",end.tv_sec, end.tv_nsec); 
     clock_gettime(CLOCK_REALTIME, &now); 
-    float elapsed = now.tv_sec - start.tv_sec + 1e-9 * (now.tv_nsec - start.tv_sec); 
+    float elapsed = now.tv_sec - start.tv_sec + (1e-9f) * (now.tv_nsec - start.tv_nsec); 
     float sleepfor= delay - elapsed; 
     if (sleepfor < 0) continue; 
 
