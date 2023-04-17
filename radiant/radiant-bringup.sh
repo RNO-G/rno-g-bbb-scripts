@@ -53,6 +53,7 @@ echo "attempting tuning"
 mask=0xffffff
 rst=0
 for round in {1..12} ; 
+do 
   echo "Round $round" 
 
   python3 examples/i02_tune_initial.py $mask $rst 
@@ -62,15 +63,19 @@ for round in {1..12} ;
     echo "Great Success!"
     #todo, verify 
     break; 
+  else
+    rst=$(( ($i % 4) > 0 ))
+    echo reset is $rst 
   fi 
-  rst=$(( ($i % 4) > 0 ))
-  echo reset is $rst 
+done
 
- if [[ $mask -ne 0x0 ]]  ; 
- then 
-   echo "Not all channels tuned. Mask of shame is $mask " 
-   exit 1; 
- fi 
+if [[ $mask -ne 0x0 ]]  ; 
+then 
+ echo "Not all channels tuned. Mask of shame is $mask " 
+ exit 1; 
+fi 
+ 
+
 
 python3 examples/i03_calib_isels.py 
 
