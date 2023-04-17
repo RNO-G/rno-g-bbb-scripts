@@ -13,12 +13,14 @@ sleep 1
 
 cd $HOME/radpy-cal 
 
+echo `pwd` 
 . env.sh 
 
 identified=0
+sleep 2
 
 for i in {1..3} ; do 
-  if timeout 3 python3 examples/radidentify.py  ; 
+  if timeout 5 python3 examples/radidentify.py  ; 
   then 
     echo "Succesful identification" 
     identified=1
@@ -26,7 +28,7 @@ for i in {1..3} ; do
   else 
     echo "Identification failed, MCU restart $i/3"
     /rno-g/bin/reset-radiant-mcu 
-    sleep 1
+    sleep 3
   fi
 done 
 
@@ -48,12 +50,12 @@ python3 examples/i01_setup_radiant.py
 
 echo "attempting tuning" 
 
-mask = 0xffffff
-reset = 0
+mask=0xffffff
+rst=0
 for round in {1..12} ; 
   echo "Round $round" 
 
-  python3 examples/i02_tune_initial.py $mask $reset 
+  python3 examples/i02_tune_initial.py $mask $rst 
   mask = printf "0x%x" $? 
   echo mask is $mask 
   if [[ $mask -eq 0x0 ]] ; then 
@@ -61,8 +63,8 @@ for round in {1..12} ;
     #todo, verify 
     break; 
   fi 
-  reset = $(( ($i % 4) > 0 ))
-  echo reset is $reset 
+  rst=$(( ($i % 4) > 0 ))
+  echo reset is $rst 
 
  if [[ $mask -ne 0x0 ]]  ; 
  then 
