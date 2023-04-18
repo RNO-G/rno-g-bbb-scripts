@@ -57,7 +57,7 @@ do
   echo "Round $round" 
 
   python3 examples/i02_tune_initial.py $mask $rst 
-  mask = printf "0x%x" $? 
+  mask=printf "0x%x" $? 
   echo mask is $mask 
   if [[ $mask -eq 0x0 ]] ; then 
     echo "Great Success!"
