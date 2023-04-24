@@ -50,16 +50,16 @@ python3 examples/i01_setup_radiant.py
 
 echo "attempting tuning" 
 
-mask=0xffffff
+mask="0xffffff"
 rst=0
 for round in {1..12} ; 
 do 
   echo "Round $round" 
 
   python3 examples/i02_tune_initial.py $mask $rst 
-  mask=`cat /tmp/radiant-fail-mask`
+  mask=`cat /tmp/radiant-fail-mask` || "0xffffff"
   echo mask is $mask 
-  if [[ $mask -eq 0x0 ]] ; then 
+  if [[ $mask -eq "0x0" ]] ; then 
     echo "Great Success!"
     #todo, verify 
     break; 
@@ -79,11 +79,43 @@ fi
 
 python3 examples/i03_calib_isels.py 
 
+examples/radsig-cli --on --freq 99 --band 0 
+python3 examples/cal_select.py 0
 
 cd $HOME/librno-g 
-make 
+make daq-test-progs 
+mdy=`date +%m%d%y` 
+suffix=0 
+lbl=$mdy.$suffix-cal0 
+
+while [ -d $lbl ] ; 
+do 
+  echo $lbl already used, incrementing 
+  let "suffix+=1"
+  lbl=$mdy$suffix-cal0 
+done
+
+radiant-try-event -f -L $lbl 
 
 
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 1
+
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-cal1 
+radiant-try-event -f -L $lbl 
+
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 2
+
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-cal2 
+radiant-try-event -f -L $lbl 
+
+
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 
+examples/radsig-cli --off
 
 
 
