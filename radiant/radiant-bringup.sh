@@ -57,9 +57,9 @@ do
   echo "Round $round" 
 
   python3 examples/i02_tune_initial.py $mask $rst 
-  mask=`cat /tmp/radiant-fail-mask` || "0xffffff"
+  mask=`cat /tmp/radiant-fail-mask` || `echo 0xffffff`
   echo mask is $mask 
-  if [[ $mask -eq "0x0" ]] ; then 
+  if [[ "$mask" -eq "0x0" ]] ; then 
     echo "Great Success!"
     #todo, verify 
     break; 
@@ -69,7 +69,7 @@ do
   fi 
 done
 
-if [[ $mask -ne 0x0 ]]  ; 
+if [[ "$mask" -ne 0x0 ]]  ; 
 then 
  echo "Not all channels tuned. Mask of shame is $mask " 
  exit 1; 
@@ -83,6 +83,7 @@ examples/radsig-cli --on --freq 99 --band 0
 python3 examples/cal_select.py 0
 
 cd $HOME/librno-g 
+. env.sh 
 make daq-test-progs 
 mdy=`date +%m%d%y` 
 suffix=0 
