@@ -82,7 +82,6 @@ python3 examples/i03_calib_isels.py
 examples/radsig-cli --on --freq 99 --band 0 
 python3 examples/cal_select.py 0
 
-. env.sh
 cd $HOME/librno-g 
 . env.sh 
 make daq-test-progs 
