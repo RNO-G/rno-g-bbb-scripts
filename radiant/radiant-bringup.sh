@@ -82,6 +82,7 @@ python3 examples/i03_calib_isels.py
 examples/radsig-cli --on --freq 99 --band 0 
 python3 examples/cal_select.py 0
 
+. env.sh
 cd $HOME/librno-g 
 make daq-test-progs 
 mdy=`date +%m%d%y` 
@@ -112,15 +113,17 @@ cd $HOME/librno-g
 lbl=$mdy.$suffix-cal2 
 radiant-try-event -f -L $lbl 
 
-
 cd $HOME/radpy-cal
 python3 examples/cal_select.py 
 examples/radsig-cli --off
 
 
+echo "Turning on amps" 
+echo "#AMPS-SET 3f 7" > /dev/ttyController
 
-
-
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-force 
+radiant-try-event -f -L $lbl -N 500 
 
 
 
