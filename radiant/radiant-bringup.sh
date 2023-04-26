@@ -6,7 +6,7 @@ echo "Turning off RADIANT... (if it's on)"
 echo "#RADIANT-OFF" > /dev/ttyController
 sleep 3
 
-"Turning off amplifiers... (if they're on)"
+echo "Turning off amplifiers... (if they're on)"
 echo "#AMPS-SET 0 0" > /dev/ttyController
 sleep 3
 
