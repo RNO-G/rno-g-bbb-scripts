@@ -6,6 +6,12 @@ echo "Turning off RADIANT... (if it's on)"
 echo "#RADIANT-OFF" > /dev/ttyController
 sleep 3
 
+"Turning off amplifiers... (if they're on)"
+echo "#AMPS-SET 0 0" > /dev/ttyController
+sleep 3
+
+
+
 echo "Turning on RADIANT"
 echo "#RADIANT-ON" > /dev/ttyController 
 sleep 1
@@ -18,6 +24,8 @@ echo `pwd`
 
 identified=0
 sleep 2
+
+
 
 for i in {1..3} ; do 
   if timeout 5 python3 examples/radidentify.py  ; 
@@ -47,6 +55,28 @@ sleep 3
 echo "Running setup" 
 
 python3 examples/i01_setup_radiant.py 
+
+
+echo  pretuning run with amps off 
+
+cd $HOME/librno-g 
+. env.sh 
+make daq-test-progs 
+mdy=`date +%m%d%y` 
+suffix=0 
+lbl=$mdy.$suffix-pre 
+
+while [ -d $lbl ] ; 
+do 
+  echo $lbl already used, incrementing 
+  let "suffix+=1"
+  lbl=$mdy$suffix-pre
+done
+
+radiant-try-event -f -L $lbl
+
+
+cd $HOME/radpy-cal
 
 echo "attempting tuning" 
 
@@ -79,22 +109,13 @@ fi
 
 python3 examples/i03_calib_isels.py 
 
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-post 
+radiant-try-event -f -L $lbl 
+
+
 examples/radsig-cli --on --freq 99 --band 0 
 python3 examples/cal_select.py 0
-
-cd $HOME/librno-g 
-. env.sh 
-make daq-test-progs 
-mdy=`date +%m%d%y` 
-suffix=0 
-lbl=$mdy.$suffix-cal0 
-
-while [ -d $lbl ] ; 
-do 
-  echo $lbl already used, incrementing 
-  let "suffix+=1"
-  lbl=$mdy$suffix-cal0 
-done
 
 radiant-try-event -f -L $lbl 
 
