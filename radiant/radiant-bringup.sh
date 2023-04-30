@@ -6,6 +6,12 @@ echo "Turning off RADIANT... (if it's on)"
 echo "#RADIANT-OFF" > /dev/ttyController
 sleep 3
 
+"Turning off amplifiers... (if they're on)"
+echo "#AMPS-SET 0 0" > /dev/ttyController
+sleep 3
+
+
+
 echo "Turning on RADIANT"
 echo "#RADIANT-ON" > /dev/ttyController 
 sleep 1
@@ -18,6 +24,8 @@ echo `pwd`
 
 identified=0
 sleep 2
+
+
 
 for i in {1..3} ; do 
   if timeout 5 python3 examples/radidentify.py  ; 
@@ -48,18 +56,40 @@ echo "Running setup"
 
 python3 examples/i01_setup_radiant.py 
 
+
+echo  pretuning run with amps off 
+
+cd $HOME/librno-g 
+. env.sh 
+make daq-test-progs 
+mdy=`date +%m%d%y` 
+suffix=0 
+lbl=$mdy.$suffix-pre 
+
+while [ -d $lbl ] ; 
+do 
+  echo $lbl already used, incrementing 
+  let "suffix+=1"
+  lbl=$mdy$suffix-pre
+done
+
+radiant-try-event -f -L $lbl
+
+
+cd $HOME/radpy-cal
+
 echo "attempting tuning" 
 
-mask=0xffffff
+mask="0xffffff"
 rst=0
 for round in {1..12} ; 
 do 
   echo "Round $round" 
 
   python3 examples/i02_tune_initial.py $mask $rst 
-  mask=`cat /tmp/radiant-fail-mask`
+  mask=`cat /tmp/radiant-fail-mask` || `echo 0xffffff`
   echo mask is $mask 
-  if [[ $mask -eq 0x0 ]] ; then 
+  if [[ "$mask" -eq "0x0" ]] ; then 
     echo "Great Success!"
     #todo, verify 
     break; 
@@ -69,7 +99,7 @@ do
   fi 
 done
 
-if [[ $mask -ne 0x0 ]]  ; 
+if [[ "$mask" -ne 0x0 ]]  ; 
 then 
  echo "Not all channels tuned. Mask of shame is $mask " 
  exit 1; 
@@ -79,16 +109,42 @@ fi
 
 python3 examples/i03_calib_isels.py 
 
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-post 
+radiant-try-event -f -L $lbl 
+
+
+examples/radsig-cli --on --freq 99 --band 0 
+python3 examples/cal_select.py 0
+
+radiant-try-event -f -L $lbl 
+
+
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 1
 
 cd $HOME/librno-g 
-make 
+lbl=$mdy.$suffix-cal1 
+radiant-try-event -f -L $lbl 
+
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 2
+
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-cal2 
+radiant-try-event -f -L $lbl 
+
+cd $HOME/radpy-cal
+python3 examples/cal_select.py 
+examples/radsig-cli --off
 
 
+echo "Turning on amps" 
+echo "#AMPS-SET 3f 7" > /dev/ttyController
 
-
-
-
-
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-force 
+radiant-try-event -f -L $lbl -N 500 
 
 
 
