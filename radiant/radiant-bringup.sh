@@ -114,9 +114,12 @@ lbl=$mdy.$suffix-post
 radiant-try-event -f -L $lbl 
 
 
+cd $HOME/radpy-cal
 examples/radsig-cli --on --freq 99 --band 0 
 python3 examples/cal_select.py 0
 
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-cal0 
 radiant-try-event -f -L $lbl 
 
 
