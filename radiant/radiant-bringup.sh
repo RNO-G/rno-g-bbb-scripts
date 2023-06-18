@@ -66,11 +66,11 @@ mdy=`date +%m%d%y`
 suffix=0 
 lbl=$mdy.$suffix-pre 
 
-while [ -d $lbl ] ; 
+while [ -d /data/test/$lbl ] ; 
 do 
   echo $lbl already used, incrementing 
   let "suffix+=1"
-  lbl=$mdy$suffix-pre
+  lbl=$mdy.$suffix-pre
 done
 
 radiant-try-event -f -L $lbl
