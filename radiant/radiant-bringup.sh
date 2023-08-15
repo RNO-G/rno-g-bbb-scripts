@@ -66,11 +66,11 @@ mdy=`date +%m%d%y`
 suffix=0 
 lbl=$mdy.$suffix-pre 
 
-while [ -d $lbl ] ; 
+while [ -d /data/test/$lbl ] ; 
 do 
   echo $lbl already used, incrementing 
   let "suffix+=1"
-  lbl=$mdy$suffix-pre
+  lbl=$mdy.$suffix-pre
 done
 
 radiant-try-event -f -L $lbl
@@ -114,9 +114,12 @@ lbl=$mdy.$suffix-post
 radiant-try-event -f -L $lbl 
 
 
+cd $HOME/radpy-cal
 examples/radsig-cli --on --freq 99 --band 0 
 python3 examples/cal_select.py 0
 
+cd $HOME/librno-g 
+lbl=$mdy.$suffix-cal0 
 radiant-try-event -f -L $lbl 
 
 

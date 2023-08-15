@@ -197,7 +197,7 @@ def reboot_modem_via_uc():
 def reboot_modem(): 
     if ENABLE_USB_RESET: 
         print ("Trying to restart modem directly") 
-        return check_ok("AT#ENHRST=1,0",False)  #reboot router 
+        return check_ok("AT#ENHRST=1,0\r\n",False)  #reboot router 
     else: 
         print("Would have restart modem via USB but not allowed") 
         return 1 
