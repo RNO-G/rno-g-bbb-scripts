@@ -148,4 +148,15 @@ radiant-try-event -f -L $lbl -N 500
 
 
 
+#if we are on the RNO-G LTE network, copy to server
+if ip addr | grep 10.3.0. ; 
+then 
+  hostname=`hostname`
+  for i in pre post cal0 cal1 cal2 force ; do 
+    ssh -t rno-g@10.1.0.1 "cd librno-g && ./daqwebplot.sh $hostname $mdy.$suffix-$i $mdy.$suffix-$i"
+  done
+  echo "Check rno-g-server:~rno-g/$hostname/$mdy.$suffix-*"
+fi 
+
+
 
