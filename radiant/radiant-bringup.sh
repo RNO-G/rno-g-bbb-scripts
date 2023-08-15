@@ -1,6 +1,8 @@
 #! /bin/bash 
 
 
+failable_mask=${1-0x0}
+
 
 echo "Turning off RADIANT... (if it's on)"
 echo "#RADIANT-OFF" > /dev/ttyController
@@ -89,7 +91,7 @@ do
   python3 examples/i02_tune_initial.py $mask $rst 
   mask=`cat /tmp/radiant-fail-mask` || `echo 0xffffff`
   echo mask is $mask 
-  if [[ "$mask" -eq "0x0" ]] ; then 
+if [ $(( $mask & ~$failable_mask )) -eq 0 ] ; then
     echo "Great Success!"
     #todo, verify 
     break; 
@@ -99,8 +101,9 @@ do
   fi 
 done
 
-if [[ "$mask" -ne 0x0 ]]  ; 
-then 
+if [ $(( $mask & ~$failable_mask )) -eq 0 ] ; then
+echo "passed with mask $mask" ;
+ else 
  echo "Not all channels tuned. Mask of shame is $mask " 
  exit 1; 
 fi 
