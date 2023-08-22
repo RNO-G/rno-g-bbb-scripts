@@ -119,34 +119,7 @@ cd $HOME/librno-g
 lbl=$mdy.$suffix-post 
 radiant-try-event -f -L $lbl 
 
-
-cd $HOME/radpy-cal
-examples/radsig-cli --on --freq 99 --band 0 
-python3 examples/cal_select.py 0
-
-cd $HOME/librno-g 
-lbl=$mdy.$suffix-cal0 
-radiant-try-event -f -L $lbl 
-
-
-cd $HOME/radpy-cal
-python3 examples/cal_select.py 1
-
-cd $HOME/librno-g 
-lbl=$mdy.$suffix-cal1 
-radiant-try-event -f -L $lbl 
-
-cd $HOME/radpy-cal
-python3 examples/cal_select.py 2
-
-cd $HOME/librno-g 
-lbl=$mdy.$suffix-cal2 
-radiant-try-event -f -L $lbl 
-
-cd $HOME/radpy-cal
-python3 examples/cal_select.py 
-examples/radsig-cli --off
-
+./radiant-check-cal.sh $mdy.$suffix
 
 echo "Turning on amps" 
 echo "#AMPS-SET 3f 7" > /dev/ttyController
@@ -160,9 +133,8 @@ radiant-try-event -f -L $lbl -N 500
 #if we are on the RNO-G LTE network, copy to server
 if ip addr | grep 10.3.0. ; 
 then 
-  hostname=`hostname`
   for i in pre post cal0 cal1 cal2 force ; do 
-    ssh -t rno-g@10.1.0.1 "cd librno-g && ./daqwebplot.sh $hostname $mdy.$suffix-$i $mdy.$suffix-$i"
+    ./radiant-copy-to-server.sh $mdy.$suffix-$i 
   done
   echo "Check rno-g-server:~rno-g/$hostname/$mdy.$suffix-*"
 fi 
