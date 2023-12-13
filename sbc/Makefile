@@ -7,6 +7,7 @@ install:
 	install 90-increase-freemem.conf /etc/sysctl.d 
 	sysctl -p 90-increase-freemem.conf 
 	-test -f /INTERNAL && install fstab /etc/fstab
+	install journald.conf /etc/systemd/ 
 
 	
 uninstall: 
