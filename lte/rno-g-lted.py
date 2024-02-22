@@ -215,7 +215,13 @@ if __name__=="__main__":
     print("USB Reset", "enabled" if ENABLE_USB_RESET else "disabled")
 
     if ENABLE_MONI: 
-        moni_file = open("/data/lte.log","a"); 
+        #TODO use log rotator here, with compression 
+        try: 
+            moni_file = open("/data/lte.log","a") 
+        except IOError as e: 
+            print(str(e))
+            print ("Using /rno-g/var/lte.log instead") 
+            moni_file = open("/rno-g/var/lte.log","a") 
 
 
     while True: 
