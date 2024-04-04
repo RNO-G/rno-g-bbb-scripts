@@ -1,0 +1,26 @@
+#! /bin/bash
+
+if [ "$#" -ne 1 ]; then
+  echo "set-station-number XX"
+  exit -1
+fi
+
+newhostname=`printf rno-g-%03d $1`
+read -p "Set station number to $1 ($newhostname)? (y/N) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]] ; then
+  echo "bwok bwok"
+  exit -1
+fi
+
+
+echo $1 > /STATION_ID || echo "you probably need to sudo" ; exit 1
+echo "#SET-STATION $1" >> /dev/ttyController || exit 1
+echo $1 > /mnt/sdcard/STATION_ID || exit 1
+
+sed -i "s/127.0.1.1.*/127.0.1.1  $newhostname.localdomain $newhostname" /etc/hosts
+hostnamectl set-hostname $newhostname
+
+sed -i "s/127.0.1.1.*/127.0.1.1  $newhostname.localdomain $newhostname" /mnt/sdcard/etc/hosts
+echo $newhostname > /mnt/sdcard/hostname
+
