@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 prefix={$1-`date -Is`}
 do_copy={$2-0}
 
@@ -31,7 +31,7 @@ python3 examples/cal_select.py
 examples/radsig-cli --off
 
 
-if [[ $docopy -eq 1 ]] ; 
+if [[ $do_copy -eq 1 ]] ; 
 then
   ./radiant-copy-to-server.sh $prefix-cal0
   ./radiant-copy-to-server.sh $prefix-cal1
