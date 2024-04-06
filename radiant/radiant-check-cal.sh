@@ -1,6 +1,8 @@
 #! /bin/bash
-prefix={$1-`date -Is`}
-do_copy={$2-0}
+prefix=${1-`date -Is`}
+do_copy=${2-0}
+echo prefix=$prefix
+echo do_copy=$do_copy
 
 cd $HOME/radpy-cal
 . env.sh 
