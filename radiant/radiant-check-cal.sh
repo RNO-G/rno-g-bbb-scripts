@@ -35,6 +35,7 @@ examples/radsig-cli --off
 
 if [[ $do_copy -eq 1 ]] ; 
 then
+  cd $HOME/rno-g-BBB-scripts/radiant
   ./radiant-copy-to-server.sh $prefix-cal0
   ./radiant-copy-to-server.sh $prefix-cal1
   ./radiant-copy-to-server.sh $prefix-cal2
