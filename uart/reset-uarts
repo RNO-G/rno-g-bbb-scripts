@@ -1,3 +1,4 @@
 #! /bin/sh
-stty -F /dev/ttyController sane
-stty -F /dev/ttyController 115200 -echo igncr -inlcr
+which=${1-ttyController}
+stty -F /dev/$which sane
+stty -F /dev/$which 115200 -echo igncr -inlcr
