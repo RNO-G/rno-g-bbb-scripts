@@ -99,7 +99,7 @@ if [ $(( $mask & ~$failable_mask )) -eq 0 ] ; then
     #todo, verify 
     break; 
   else
-    rst=$(( ($i % 4) > 0 ))
+    rst=$(( ($i % 4) == 0 && $i > 0 ))
     echo reset is $rst 
   fi 
 done
@@ -134,7 +134,7 @@ radiant-try-event -f -L $lbl -N 500
 if ip addr | grep 10.3.0. ; 
 then 
   for i in pre post cal0 cal1 cal2 force ; do 
-    ./radiant-copy-to-server.sh $mdy.$suffix-$i 
+    ./radiant-copy.sh $mdy.$suffix-$i 
   done
   echo "Check rno-g-server:~rno-g/$hostname/$mdy.$suffix-*"
 fi 
