@@ -2,5 +2,5 @@
 
 SUBSYSTEM=="tty",  KERNEL=="ttyS1", SYMLINK+="ttyController", SYMLINK+="ttyO1", RUN+="/bin/stty -F /dev/ttyS1 115200 -echo igncr -inlcr"
 SUBSYSTEM=="tty",  KERNEL=="ttyS4", SYMLINK+="ttyGPS",  SYMLINK+="ttyO4", RUN+="/bin/stty -F /dev/ttyS4 -echo"
-SUBSYSTEM=="tty",  KERNEL=="ttyS5", SYMLINK+="ttyRadiant", SYMLINK+= ttyO5", RUN+="/bin/stty -F /dev/ttyS5 115200 -echo raw"
+SUBSYSTEM=="tty",  KERNEL=="ttyS5", SYMLINK+="ttyRadiant", SYMLINK+= "ttyO5", RUN+="/bin/stty -F /dev/ttyS5 115200 -echo raw"
 
