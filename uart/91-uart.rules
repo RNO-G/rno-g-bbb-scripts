@@ -3,4 +3,5 @@
 SUBSYSTEM=="tty",  KERNEL=="ttyS1", SYMLINK+="ttyController", SYMLINK+="ttyO1", RUN+="/bin/stty -F /dev/ttyS1 115200 -echo igncr -inlcr"
 SUBSYSTEM=="tty",  KERNEL=="ttyS4", SYMLINK+="ttyGPS",  SYMLINK+="ttyO4", RUN+="/bin/stty -F /dev/ttyS4 -echo"
 SUBSYSTEM=="tty",  KERNEL=="ttyS5", SYMLINK+="ttyRadiant", SYMLINK+= "ttyO5", RUN+="/bin/stty -F /dev/ttyS5 115200 -echo raw"
+SUBSYSTEM=="tty",ACTION=="add",  ENV{ID_USB_INTERFACE_NUM}=="00", ENV{ID_VENDOR_ID}=="1546", ENV{ID_MODEL_ID}=="01a9", SYMLINK+="ttyGPS-USB"
 
