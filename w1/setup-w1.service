@@ -1,0 +1,10 @@
+[Unit] 
+Description=Set up W1 
+Requires=local-fs.target
+
+[Service]
+ExecStart=/rno-g/bin/setup-w1
+Type=oneshot
+
+[Install] 
+WantedBy=multi-user.target
