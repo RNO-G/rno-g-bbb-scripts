@@ -135,7 +135,7 @@ radiant-try-event -f -L $lbl -N 500
 if ip addr | grep 10.3.0. ; 
 then 
   for i in pre post cal0 cal1 cal2 force ; do 
-    ./radiant-copy.sh $mdy.$suffix-$i 
+    ./radiant-copy-to-server.sh $mdy.$suffix-$i 
   done
   echo "Check rno-g-server:~rno-g/$hostname/$mdy.$suffix-*"
 fi 
