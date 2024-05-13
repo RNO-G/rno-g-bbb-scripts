@@ -1,16 +1,18 @@
 #include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 
-
-int main() 
+int main()
 {
-  FILE * f = fopen("/proc/sys/vm/drop_caches","w");
-  if (!f) 
+  sync();
+  int fd = open("/proc/sys/vm/drop_caches",O_WRONLY);
+  if (fd < 0)
   {
     fprintf(stderr,"Couldn't open /proc/sys/vm/drop_caches\n");
     return 1;
   }
-  fprintf(f,"1"); 
-  fclose(f);
+  write(fd,"3",1);
+  close(fd);
   return 0;
 }
