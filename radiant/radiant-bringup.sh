@@ -86,7 +86,7 @@ echo "attempting tuning"
 
 mask="0xffffff"
 rst=0
-for round in {1..12} ; 
+for round in {1..24} ; 
 do 
   echo "Round $round" 
 
@@ -99,7 +99,8 @@ if [ $(( $mask & ~$failable_mask )) -eq 0 ] ; then
     #todo, verify 
     break; 
   else
-    rst=$(( ($i % 4) == 0 && $i > 0 ))
+    sleep 10 # seems like backing off may help?
+    rst=$(( ($i % 6) == 0 && $i > 0 ))
     echo reset is $rst 
   fi 
 done

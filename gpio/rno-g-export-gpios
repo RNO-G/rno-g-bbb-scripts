@@ -21,3 +21,13 @@ if [ ! -d /sys/class/gpio/gpio89 ]; then
 	ln -s /sys/class/gpio/gpio89 /dev/gpioRADIANTMCURESET 
 fi
 #
+
+if [ ! -d /dev/spi ]; then
+  mkdir /dev/spi
+  ln -s /dev/spidev0.0 /dev/spi/0.0
+  ln -s /dev/spidev1.0 /dev/spi/1.0
+  ln -s /dev/spidev0.1 /dev/spi/0.1
+  ln -s /dev/spidev1.1 /dev/spi/1.1
+  chgrp gpio /dev/spidev*
+  chmod 0660 /dev/spidev*
+fi
