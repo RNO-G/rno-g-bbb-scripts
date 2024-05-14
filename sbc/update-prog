@@ -1,0 +1,21 @@
+#! /bin/sh
+
+
+if [ ! -d $HOME/prog ] ; then
+mkdir -p $HOME/prog
+fi
+
+if [ ! -O $HOME/prog ] ; then
+ sudo chown rno-g:rno-g $HOME/prog
+ sudo chown rno-g:rno-g $HOME/prog/*
+fi
+
+
+cd $HOME/prog
+
+wget -N https://github.com/RNO-G/radiantBoardManager/releases/download/v0r2p19/radiantBoardManager_v0r2p19.ino.radiant_v3.3200MHz.bin
+wget -N https://github.com/RNO-G/firmware-radiant/releases/download/v0r6p0/bootloader.bin
+wget -N https://github.com/RNO-G/firmware-radiant/releases/download/v0r6p0/radiant_top_v0r6p0.bin
+wget -N https://github.com/RNO-G/control-uC/releases/download/Chicago.051424.0-REVF/rno-G-uC-main-Chicago.051424.0-REVF.bin
+
+
