@@ -11,7 +11,7 @@ if [ ! -O $HOME/prog ] ; then
  sudo chown rno-g:rno-g $HOME/prog/*
 fi
 
-if [ "$force" == "1" ] ; then
+if [ "$force" -eq "1" ] ; then
   rm $HOME/prog/*
 fi
 
