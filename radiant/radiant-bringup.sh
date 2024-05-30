@@ -1,6 +1,7 @@
 #! /bin/bash 
 
 
+startdir=`pwd`
 failable_mask=${1-0x0}
 
 echo "Failable mask is $failable_mask"
@@ -134,6 +135,7 @@ radiant-try-event -f -L $lbl -N 500  &> /tmp/radiant-force.log
 #if we are on the RNO-G LTE network, copy to server
 if ip addr | grep 10.3.0. ; 
 then 
+  cd $startdir
   for i in pre post cal0 cal1 cal2 force ; do 
     ./radiant-copy-to-server.sh $mdy.$suffix-$i 
   done

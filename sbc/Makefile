@@ -3,6 +3,7 @@ help:
 
 install: bbb-drop-caches
 	install bbb-drop-caches /rno-g/bin 
+	install update-prog /rno-g/bin 
 	chown nobody /rno-g/bin/bbb-drop-caches
 	chmod +s /rno-g/bin/bbb-drop-caches
 	install enter-fast-mode /rno-g/bin
@@ -15,5 +16,7 @@ install: bbb-drop-caches
 
 	
 uninstall: 
+	rm -f /rno-g/bin/bbb-drop-caches
+	rm -f /rno-g/bin/update-prog
 	rm -f /rno-g/bin/enter-fast-mode
 	rm -f /rno-g/bin/enter-power-saving-mode
