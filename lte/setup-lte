@@ -100,4 +100,4 @@ run("ip route add default via 10.2.0.1");
 #ping 
 run ("ping -c 3 10.1.0.1"); 
 
-run('echo "nameserver 8.8.8.8" > /etc/resolv.conf')
+run('if [ -f /etc/systemd/resolved.conf ] ; then mkdir -p /etc/systemd/resolved.conf.d/ && echo "DNS=8.8.8.8 8.8.4.4" > /etc/systemd/resolved.conf.d/google.conf && systemctl restart systemd-resolved ; else echo "nameserver 8.8.8.8" > /etc/resolv.conf ; fi ' )
