@@ -178,7 +178,7 @@ def try_to_connect():
     run("ip route add 10.2.0.0/24 via 10.2.0.1"); 
 
     run("ip route add default via 10.2.0.1"); 
-    run('if [ -f /etc/systemd/resolved.conf ] ; then mkdir -p /etc/systemd/resolved.conf.d/ && echo "DNS=8.8.8.8 8.8.4.4" > /etc/systemd/resolved.conf.d/google.conf && systemctl restart systemd-resolved ; else echo "nameserver 8.8.8.8" > /etc/resolv.conf ; fi ' )
+    run('if  systemctl --quiet is-enabled systemd-resolved ; then mkdir -p /etc/systemd/resolved.conf.d/ && echo "DNS=8.8.8.8 8.8.4.4" > /etc/systemd/resolved.conf.d/google.conf && systemctl restart systemd-resolved ; else echo "nameserver 8.8.8.8" > /etc/resolv.conf ; fi ' )
     time.sleep(10) 
     return  0
 
