@@ -1,7 +1,7 @@
 help: 
 	@echo "make install or uninstall"
 
-install: bbb-drop-caches
+install: bbb-drop-caches 
 	install bbb-drop-caches /rno-g/bin 
 	install update-prog /rno-g/bin 
 	chown nobody /rno-g/bin/bbb-drop-caches
@@ -13,8 +13,11 @@ install: bbb-drop-caches
 	-test -f /INTERNAL && install fstab /etc/fstab
 	install journald.conf /etc/systemd/ 
 	if [ `cat /REV` = F ] ; then install interfaces /etc/network/ ; fi 
+	cp ssh-config ~/.ssh/config
+	chown rno-g:rno-g ~/.ssh/config
+	chmod 600 ~/.ssh/config
 
-	
+
 uninstall: 
 	rm -f /rno-g/bin/bbb-drop-caches
 	rm -f /rno-g/bin/update-prog
