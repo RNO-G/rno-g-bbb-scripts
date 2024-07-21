@@ -12,7 +12,7 @@ install: bbb-drop-caches
 	sysctl -p 90-increase-freemem.conf 
 	-test -f /INTERNAL && install fstab /etc/fstab
 	install journald.conf /etc/systemd/ 
-	if [ `cat /REV` = F ] ; then install interfaces /etc/network/ ; fi 
+	if systemctl --quiet is-enabled systemd-networkd ; then install interfaces /etc/network/ ; fi
 	cp ssh-config ~/.ssh/config
 	chown rno-g:rno-g ~/.ssh/config
 	chmod 600 ~/.ssh/config
