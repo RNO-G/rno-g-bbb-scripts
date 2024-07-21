@@ -21,7 +21,16 @@ if [ ! -d /sys/class/gpio/gpio89 ]; then
 	ln -s /sys/class/gpio/gpio89 /dev/gpioRADIANTMCURESET 
 fi
 #
+#
+#
+# RADIANT SPI ENABLE
 
+if [ ! -d /sys/class/gpio/gpio61 ]; then
+	echo 61 > /sys/class/gpio/export
+	ln -s /sys/class/gpio/gpio61 /dev/gpioRADIANTSPI 
+fi
+
+# SPI permissions
 if [ ! -d /dev/spi ]; then
   mkdir /dev/spi
   ln -s /dev/spidev0.0 /dev/spi/0.0

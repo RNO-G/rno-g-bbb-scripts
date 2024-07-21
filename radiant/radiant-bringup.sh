@@ -78,7 +78,7 @@ do
   lbl=$mdy.$suffix-pre
 done
 
-radiant-try-event -f -L $lbl
+radiant-try-event -f -L $lbl &> /tmp/radiant-pre.log
 
 
 cd $HOME/radpy-cal
@@ -119,16 +119,16 @@ python3 examples/i03_calib_isels.py
 
 cd $HOME/librno-g 
 lbl=$mdy.$suffix-post 
-radiant-try-event -f -L $lbl 
+radiant-try-event -f -L $lbl  &> /tmp/radiant-post.log
 
-./radiant-check-cal.sh $mdy.$suffix
+./radiant-check-cal.sh $mdy.$suffix  &> /tmp/radiant-check-cal.log
 
 echo "Turning on amps" 
 echo "#AMPS-SET 3f 7" > /dev/ttyController
 
 cd $HOME/librno-g 
 lbl=$mdy.$suffix-force 
-radiant-try-event -f -L $lbl -N 500 
+radiant-try-event -f -L $lbl -N 500  &> /tmp/radiant-force.log
 
 
 
