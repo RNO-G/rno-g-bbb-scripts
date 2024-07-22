@@ -13,9 +13,9 @@ install: bbb-drop-caches
 	-test -f /INTERNAL && install fstab /etc/fstab
 	install journald.conf /etc/systemd/ 
 	if systemctl --quiet is-enabled systemd-networkd ; then install interfaces /etc/network/ ; fi
-	cp ssh-config ~/.ssh/config
-	chown rno-g:rno-g ~/.ssh/config
-	chmod 600 ~/.ssh/config
+	cp ssh-config /home/rno-g/.ssh/config
+	chown rno-g:rno-g /home/rno-g/.ssh/config
+	chmod 600 /home/rno-g/.ssh/config
 	mkdir -p /etc/systemd/resolved.conf.d
 	install google-dns.conf /etc/systemd/resolved.conf.d/
 
