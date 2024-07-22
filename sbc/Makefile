@@ -16,6 +16,8 @@ install: bbb-drop-caches
 	cp ssh-config ~/.ssh/config
 	chown rno-g:rno-g ~/.ssh/config
 	chmod 600 ~/.ssh/config
+	mkdir -p /etc/systemd/resolved.conf.d
+	install google-dns.conf /etc/systemd/resolved.conf.d/
 
 
 uninstall: 
