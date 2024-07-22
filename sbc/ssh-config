@@ -1,5 +1,5 @@
 IdentityFile ~/.ssh/key
-IdentifyFile ~/.ssh/id_rsa
+IdentityFile ~/.ssh/id_rsa
 
 Host 10.1.0.1
   HostName 10.1.0.1
