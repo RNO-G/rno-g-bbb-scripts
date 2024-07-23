@@ -1,0 +1,9 @@
+IdentityFile ~/.ssh/key
+IdentityFile ~/.ssh/id_rsa
+
+Host 10.1.0.1
+  HostName 10.1.0.1
+  User rno-g
+  ControlMaster auto
+  ControlPath ~/.ssh/server-control-master
+  ControlPersist 30
