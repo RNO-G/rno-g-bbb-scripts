@@ -10,6 +10,8 @@ install: bbb-drop-caches
 	install enter-power-saving-mode /rno-g/bin
 	install 90-increase-freemem.conf /etc/sysctl.d 
 	sysctl -p 90-increase-freemem.conf 
+	install 91-bbr-congestion-control.conf /etc/sysctl.d 
+	sysctl -p 91-bbr-congestion-control.conf 
 	-test -f /INTERNAL && install fstab /etc/fstab
 	install journald.conf /etc/systemd/ 
 	if [ `cat /REV` = F ] ; then install interfaces /etc/network/ ; fi 
